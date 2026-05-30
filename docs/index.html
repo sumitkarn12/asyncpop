@@ -4,13 +4,16 @@
 <head>
 	<meta charset="UTF-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
-	<title>AsyncPop | Interactive Demo Playground</title>
+	<title>AsyncPop | Non-Blocking Window Popups</title>
 	<style>
 		:root {
-			--bg: #f5f7fa;
+			--bg: #f8fafc;
 			--card-bg: #ffffff;
-			--text: #1e293b;
+			--text: #0f172a;
+			--text-muted: #475569;
 			--primary: #007aff;
+			--border: #e2e8f0;
+			--code-bg: #1e293b;
 		}
 
 		@media (prefers-color-scheme: dark) {
@@ -18,7 +21,10 @@
 				--bg: #0f172a;
 				--card-bg: #1e293b;
 				--text: #f8fafc;
+				--text-muted: #94a3b8;
 				--primary: #38bdf8;
+				--border: #334155;
+				--code-bg: #020617;
 			}
 		}
 
@@ -26,40 +32,74 @@
 			font-family: system-ui, -apple-system, sans-serif;
 			background-color: var(--bg);
 			color: var(--text);
+			line-height: 1.6;
+			margin: 0;
+			padding: 40px 20px;
 			display: flex;
 			flex-direction: column;
 			align-items: center;
-			justify-content: center;
-			min-height: 100vh;
-			margin: 0;
-			padding: 20px;
 		}
 
-		.hero {
+		.container {
+			max-width: 750px;
+			width: 100%;
+		}
+
+		header {
 			text-align: center;
-			max-width: 600px;
 			margin-bottom: 40px;
 		}
 
-		.hero h1 {
+		header h1 {
 			font-size: 3rem;
-			margin-bottom: 10px;
+			margin: 0 0 10px 0;
 		}
 
-		.hero p {
+		header p {
 			font-size: 1.2rem;
-			opacity: 0.8;
+			color: var(--text-muted);
+			margin: 0 0 20px 0;
 		}
 
-		.card {
+		.github-btn {
+			display: inline-flex;
+			align-items: center;
+			gap: 8px;
+			background: #24292e;
+			color: #fff;
+			padding: 10px 20px;
+			border-radius: 6px;
+			text-decoration: none;
+			font-weight: 600;
+			font-size: 0.95rem;
+			transition: background 0.2s;
+		}
+
+		.github-btn:hover {
+			background: #1b1f23;
+		}
+
+		section {
 			background: var(--card-bg);
 			padding: 30px;
 			border-radius: 16px;
-			box-shadow: 0 10px 25px rgba(0, 0, 0, 0.05);
+			border: 1px solid var(--border);
+			box-shadow: 0 4px 20px rgba(0, 0, 0, 0.02);
+			margin-bottom: 30px;
+		}
+
+		h2 {
+			margin-top: 0;
+			font-size: 1.5rem;
+			border-bottom: 2px solid var(--border);
+			padding-bottom: 8px;
+		}
+
+		.demo-buttons {
 			display: flex;
-			gap: 15px;
+			gap: 12px;
 			flex-wrap: wrap;
-			justify-content: center;
+			margin: 20px 0;
 		}
 
 		button {
@@ -71,68 +111,161 @@
 			cursor: pointer;
 			background: var(--primary);
 			color: white;
-			transition: transform 0.1s;
+			transition: transform 0.1s, opacity 0.2s;
+		}
+
+		button:hover {
+			opacity: 0.9;
 		}
 
 		button:active {
 			transform: scale(0.97);
 		}
 
-		.console-log {
-			margin-top: 30px;
-			background: #000;
+		.terminal {
+			background: #000000;
 			color: #00ff00;
-			padding: 15px;
-			font-family: monospace;
-			border-radius: 8px;
-			width: 100%;
-			max-width: 500px;
+			padding: 18px;
+			font-family: 'Courier New', Courier, monospace;
+			font-size: 0.95rem;
+			border-radius: 10px;
 			min-height: 50px;
-			box-sizing: border-box;
+			box-shadow: inset 0 0 10px rgba(0, 255, 0, 0.2);
+		}
+
+		pre {
+			background: var(--code-bg);
+			color: #f8fafc;
+			padding: 18px;
+			border-radius: 10px;
+			overflow-x: auto;
+			font-family: monospace;
+			font-size: 0.9rem;
+		}
+
+		code {
+			font-family: monospace;
+			background: rgba(0, 0, 0, 0.05);
+			padding: 2px 6px;
+			border-radius: 4px;
+		}
+
+		@media (prefers-color-scheme: dark) {
+			code {
+				background: rgba(255, 255, 255, 0.1);
+			}
 		}
 	</style>
-	<script src="../dist/asyncpop.js"></script>
+
+	<script src="https://cdn.jsdelivr.net/gh/sumitkarn12/asyncpop@latest/dist/asyncpop.min.js"></script>
 </head>
 
 <body>
 
-	<div class="hero">
-		<h1>🚀 AsyncPop</h1>
-		<p>Test the non-blocking framework below. Notice how it instantly respects your system light/dark mode
-			preference.</p>
-	</div>
+	<div class="container">
+		<header>
+			<h1>🚀 AsyncPop</h1>
+			<p>A lightweight, asynchronous, non-blocking framework replacement for native browser dialogs.</p>
+			<a href="https://github.com/sumitkarn12/asyncpop" target="_blank" class="github-btn">
+				<svg height="20" width="20" viewBox="0 0 16 16" fill="currentColor">
+					<path
+						d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z">
+					</path>
+				</svg>
+				View on GitHub
+			</a>
+		</header>
 
-	<div class="card">
-		<button onclick="triggerAlert()">Trigger Alert</button>
-		<button onclick="triggerConfirm()">Trigger Confirm</button>
-		<button onclick="triggerPrompt()">Trigger Prompt</button>
-	</div>
+		<section>
+			<h2>🤔 The Problem with Native Popups</h2>
+			<p>
+				The browser's native window dialog methods (<code>alert()</code>, <code>confirm()</code>, and
+				<code>prompt()</code>) have a severe operational limitation:
+				<strong>they are completely synchronous</strong>.
+			</p>
+			<p>
+				When a native popup opens, it completely freezes the main execution thread of your application.
+				Background data fetches pause, ongoing animations stagger, CSS UI transitions halt, and your users
+				experience a clunky, outdated system overlay that cannot be customized to match your web app's theme.
+			</p>
+			<p>
+				<strong>AsyncPop fixes this entirely.</strong> It creates beautiful custom DOM components mimicking the
+				exact API signatures but operates asynchronously utilizing modern JavaScript
+				<code>Promises</code>—keeping your UI responsive and fully dynamic.
+			</p>
+		</section>
 
-	<div class="console-log" id="console">Output terminal: Waiting for interaction...</div>
+		<section>
+			<h2>🎮 Interactive Live Demo</h2>
+			<p>Click any button below to see the framework in action. Open your device OS settings to toggle between
+				Light and Dark modes—the popups adapt instantly without reloading the page!</p>
+
+			<div class="demo-buttons">
+				<button onclick="runAlert()">Trigger Async Alert</button>
+				<button onclick="runConfirm()">Trigger Async Confirm</button>
+				<button onclick="runPrompt()">Trigger Async Prompt</button>
+			</div>
+
+			<div class="terminal" id="terminal-out">
+        <p>> Waiting for execution signals...</p>
+      </div>
+		</section>
+
+		<section>
+			<h2>🛠️ How to Use</h2>
+			<p>Import the framework directly into your project files. Since it handles all of its own dynamic HTML
+				generation and CSS runtime layout injection on the fly, you do not need to link any external style
+				sheets manually.</p>
+
+			<h3>1. Include the Library script</h3>
+			<pre>&lt;script src="https://cdn.jsdelivr.net/gh/sumitkarn12/asyncpop@latest/src/asyncpop.min.js"&gt;&lt;/script&gt;</pre>
+
+			<h3>2. Execute Code inside Async Contexts</h3>
+			<p>Treat them identically to standard sequential browser architecture blocks using simple
+				<code>async / await</code> handles:</p>
+			<pre><code class="language-javascript">async function handleSystemFlow() {
+  // --- ALERT ---
+  await window.AsyncPop.alert("Operational setup complete!", "System Notice");
+
+  // --- CONFIRM ---
+  const dynamicChoice = await window.AsyncPop.confirm("Do you accept the new configurations?");
+  console.log(dynamicChoice); // Returns: true OR false
+
+  // --- PROMPT ---
+  const userInput = await window.AsyncPop.prompt("Please state your system code identifier:");
+  console.log(userInput); // Returns: "User String Inputs" OR null if cancelled
+}</code></pre>
+		</section>
+	</div>
 
 	<script>
-		const logger = document.getElementById('console');
-    
-    function log(msg) {
-      logger.innerText = `> ${msg}`;
+		const term = document.getElementById('terminal-out');
+    function printTerm(text) {
+      const p = document.createElement("p")
+      p.innerText = `> [${(new Date()).toLocaleString()}] ${text}`;
+      term.prepend(p);
     }
 
-    async function triggerAlert() {
-      log("Alert open...");
-      await AsyncPop.alert("This is a beautiful async alert box.", "Custom Alert");
-      log("Alert resolved! The thread never blocked.");
+    async function runAlert() {
+      printTerm("Opening window.AsyncPop.alert()...");
+      await AsyncPop.alert("This is a beautiful non-blocking alert element built with raw JavaScript.", "Success Message");
+      printTerm("Alert Resolved! Notice how smoothly the terminal updated without halting execution.");
     }
 
-    async function triggerConfirm() {
-      log("Confirm open...");
-      const result = await AsyncPop.confirm("Do you like this framework?", "Quick Question");
-      log(`Confirm resolved with value: ${result}`);
+    async function runConfirm() {
+      printTerm("Opening window.AsyncPop.confirm()...");
+      const decision = await AsyncPop.confirm("Do you agree that modern web apps should avoid using blocking native code?", "Framework Evaluation");
+      printTerm(`Confirm Resolved! Return Value Received: ${decision} (Type: ${typeof decision})`);
     }
 
-    async function triggerPrompt() {
-      log("Prompt open...");
-      const result = await AsyncPop.prompt("What is your favorite programming language?", "e.g. JavaScript", "Survey");
-      log(`Prompt resolved with value: "${result}"`);
+    async function runPrompt() {
+      printTerm("Opening window.AsyncPop.prompt()...");
+      const textVal = await AsyncPop.prompt("Enter your custom name handle below:", "e.g., CodeDev99", "User Onboarding");
+      if (textVal === null) {
+        printTerm("Prompt Resolved! Return Value Received: null (User cancelled or pressed Escape)");
+      } else {
+        printTerm(`Prompt Resolved! Return Value Received: "${textVal}"`);
+      }
     }
 	</script>
 </body>
