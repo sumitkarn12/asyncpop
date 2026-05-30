@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>AsyncPop | Interactive Demo Playground</title>
+	<style>
+		:root {
+			--bg: #f5f7fa;
+			--card-bg: #ffffff;
+			--text: #1e293b;
+			--primary: #007aff;
+		}
+
+		@media (prefers-color-scheme: dark) {
+			:root {
+				--bg: #0f172a;
+				--card-bg: #1e293b;
+				--text: #f8fafc;
+				--primary: #38bdf8;
+			}
+		}
+
+		body {
+			font-family: system-ui, -apple-system, sans-serif;
+			background-color: var(--bg);
+			color: var(--text);
+			display: flex;
+			flex-direction: column;
+			align-items: center;
+			justify-content: center;
+			min-height: 100vh;
+			margin: 0;
+			padding: 20px;
+		}
+
+		.hero {
+			text-align: center;
+			max-width: 600px;
+			margin-bottom: 40px;
+		}
+
+		.hero h1 {
+			font-size: 3rem;
+			margin-bottom: 10px;
+		}
+
+		.hero p {
+			font-size: 1.2rem;
+			opacity: 0.8;
+		}
+
+		.card {
+			background: var(--card-bg);
+			padding: 30px;
+			border-radius: 16px;
+			box-shadow: 0 10px 25px rgba(0, 0, 0, 0.05);
+			display: flex;
+			gap: 15px;
+			flex-wrap: wrap;
+			justify-content: center;
+		}
+
+		button {
+			padding: 12px 24px;
+			font-size: 1rem;
+			font-weight: 600;
+			border: none;
+			border-radius: 8px;
+			cursor: pointer;
+			background: var(--primary);
+			color: white;
+			transition: transform 0.1s;
+		}
+
+		button:active {
+			transform: scale(0.97);
+		}
+
+		.console-log {
+			margin-top: 30px;
+			background: #000;
+			color: #00ff00;
+			padding: 15px;
+			font-family: monospace;
+			border-radius: 8px;
+			width: 100%;
+			max-width: 500px;
+			min-height: 50px;
+			box-sizing: border-box;
+		}
+	</style>
+	<script src="../dist/asyncpop.js"></script>
+</head>
+
+<body>
+
+	<div class="hero">
+		<h1>🚀 AsyncPop</h1>
+		<p>Test the non-blocking framework below. Notice how it instantly respects your system light/dark mode
+			preference.</p>
+	</div>
+
+	<div class="card">
+		<button onclick="triggerAlert()">Trigger Alert</button>
+		<button onclick="triggerConfirm()">Trigger Confirm</button>
+		<button onclick="triggerPrompt()">Trigger Prompt</button>
+	</div>
+
+	<div class="console-log" id="console">Output terminal: Waiting for interaction...</div>
+
+	<script>
+		const logger = document.getElementById('console');
+    
+    function log(msg) {
+      logger.innerText = `> ${msg}`;
+    }
+
+    async function triggerAlert() {
+      log("Alert open...");
+      await AsyncPop.alert("This is a beautiful async alert box.", "Custom Alert");
+      log("Alert resolved! The thread never blocked.");
+    }
+
+    async function triggerConfirm() {
+      log("Confirm open...");
+      const result = await AsyncPop.confirm("Do you like this framework?", "Quick Question");
+      log(`Confirm resolved with value: ${result}`);
+    }
+
+    async function triggerPrompt() {
+      log("Prompt open...");
+      const result = await AsyncPop.prompt("What is your favorite programming language?", "e.g. JavaScript", "Survey");
+      log(`Prompt resolved with value: "${result}"`);
+    }
+	</script>
+</body>
+
+</html>
