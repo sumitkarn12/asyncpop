@@ -149,6 +149,11 @@
 			padding: 2px 6px;
 			border-radius: 4px;
 		}
+    .label { font-weight:bold; margin-top: 16px; font-size: 12px; }
+    .columns { display: grid; gap: 16px; grid-template-rows: 1fr 1fr; grid-template-columns: 1fr 1fr; width: 100%; }
+    .column .fields { position: relative; border-radius: 12px; overflow: hidden; }
+    .column .fields input { height: 46px; width: 100%; }
+    .column .fields .button { position: absolute; right: 0; top: 0; }
 
 		@media (prefers-color-scheme: dark) {
 			code {
@@ -158,6 +163,8 @@
 	</style>
 
 	<script src="https://cdn.jsdelivr.net/gh/sumitkarn12/asyncpop@latest/dist/asyncpop.min.js"></script>
+<link rel="stylesheet"
+	href="https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@24,400,0,0&icon_names=content_copy" />
 </head>
 
 <body>
@@ -207,8 +214,8 @@
 			</div>
 
 			<div class="terminal" id="terminal-out">
-        <p>> Waiting for execution signals...</p>
-      </div>
+				<p>> Waiting for execution signals...</p>
+			</div>
 		</section>
 
 		<section>
@@ -218,6 +225,7 @@
 				sheets manually.</p>
 
 			<h3>1. Include the Library script</h3>
+      
 			<pre>&lt;script src="https://cdn.jsdelivr.net/gh/sumitkarn12/asyncpop@latest/dist/asyncpop.min.js"&gt;&lt;/script&gt;</pre>
 
 			<h3>2. Execute Code inside Async Contexts</h3>
@@ -236,8 +244,47 @@
   console.log(userInput); // Returns: "User String Inputs" OR null if cancelled
 }</code></pre>
 		</section>
+
+		<section>
+			<h2>🔗 CDN Link Powered by <span class="tag">jsDelivr</span></h2>
+			<div class="columns">
+				<div class="column">
+					<label class="label">Minified Script Tag</label>
+          <div class="fields">
+            <input class="input" type="text" disabled value='&lt;script src="https://cdn.jsdelivr.net/gh/sumitkarn12/asyncpop@latest/dist/asyncpop.min.js"&gt;&lt;/script&gt;' />
+            <button class="button copy-cdn-link"><span class="material-symbols-rounded">content_copy</span></button>
+          </div>
+        </div>
+        
+				<div class="column">
+					<label class="label">Non-Minified Script Tag</label>
+          <div class="fields">
+            <input class="input" type="text" disabled value='&lt;script src="https://cdn.jsdelivr.net/gh/sumitkarn12/asyncpop@latest/dist/asyncpop.js"&gt;&lt;/script&gt;' />
+            <button class="button copy-cdn-link"><span class="material-symbols-rounded">content_copy</span></button>
+          </div>
+        </div>
+
+				<div class="column">
+					<label class="label">Minified CDN Link</label>
+          <div class="fields">
+            <input class="input" type="text" disabled value='https://cdn.jsdelivr.net/gh/sumitkarn12/asyncpop@latest/dist/asyncpop.min.js' />
+            <button class="button copy-cdn-link"><span class="material-symbols-rounded">content_copy</span></button>
+          </div>
+        </div>
+
+				<div class="column">
+					<label class="label">Non-Minified CDN LINK</label>
+          <div class="fields">
+            <input class="input" type="text" disabled value='https://cdn.jsdelivr.net/gh/sumitkarn12/asyncpop@latest/dist/asyncpop.js' />
+            <button class="button copy-cdn-link"><span class="material-symbols-rounded">content_copy</span></button>
+          </div>
+        </div>
+        </div>
+
+		</section>
 	</div>
 
+</body>
 	<script>
 		const term = document.getElementById('terminal-out');
     function printTerm(text) {
@@ -267,7 +314,17 @@
         printTerm(`Prompt Resolved! Return Value Received: "${textVal}"`);
       }
     }
+		document.querySelectorAll(".copy-cdn-link").forEach( el => {
+      el.addEventListener( "click", async ev => {
+        const t = ev.target.closest(".fields").querySelector("input").value;
+        try {
+          await navigator.clipboard.writeText( t );
+          AsyncPop.alert( "Copied to clipboard!" );
+        } catch(e) {
+          AsyncPop.alert( JSON.stringify( e ), "Error" );
+        }
+      });
+		});
 	</script>
-</body>
 
 </html>
